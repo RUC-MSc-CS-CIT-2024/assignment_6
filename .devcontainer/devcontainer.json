@@ -1,0 +1,26 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+	"name": "Node.js environment",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"remoteUser": "node",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+	"mounts": [
+    	"source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/src/app/node_modules,type=volume"
+	],
+	"postCreateCommand": "sudo chown node src/app/node_modules",
+	"workspaceFolder": "/workspace",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"forwardPorts": [ 3000 ],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"dsznajder.es7-react-js-snippets"
+			]
+		}
+	}
+}
