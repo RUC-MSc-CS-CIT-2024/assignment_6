@@ -1,3 +1,4 @@
+import { log } from 'console';
 import './App.css';
 import { useEffect, useState } from 'react';
 
@@ -24,25 +25,45 @@ function App() {
 
 function Main({ query }: { query: string }) {
 
-  const apiurl = 'https://api.themoviedb.org/3/search/person';
-  const key = 'cf5242e669c485673e290d7a2070224e';
-  const url = `${apiurl}?query=${query}&api_key=${key}`;
 
   const [persons, setPersons] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [prevQuery, setPrevQuery] = useState(query);
+  const [page, setPage] = useState(1);
+  const [prevPage, setPrevPage] = useState(page);
+  const [totalPages, setTotalPages] = useState();
+  const [index, setIndex] = useState(0);
+
+  const apiurl = 'https://api.themoviedb.org/3/search/person';
+  const key = 'cf5242e669c485673e290d7a2070224e';
+  const url = `${apiurl}?query=${query}&page=${page}&api_key=${key}`;
+  console.log(url);
 
   useEffect(() => {
     if (query !== prevQuery) {
       setPersons([]);
       setSelectedIndex(0);
       setPrevQuery(query);
+      setPage(1);
+      setIndex(0);
+    }
+
+    if (page !== prevPage && page !== 1) {
+      setSelectedIndex(0);
+      setPrevPage(page);
+      setIndex(page * 20 -20)
+    }
+
+    if (page === 1) {
+      setIndex(0);
+      setPrevPage(page);
     }
 
     fetch(url)
     .then(response => response.json())
     .then(data => {
       setPersons(data.results);
+      setTotalPages(data.total_pages);
       console.log(data)});
   }, [query, url, prevQuery]);
 
@@ -53,26 +74,29 @@ function Main({ query }: { query: string }) {
     </div>
   ) : (
     <div>
-      <h1>Persons</h1>
+      <div className= "button-nav">
+        {selectedIndex === 0 ? null :<button onClick={() => setSelectedIndex(0)}>{1 + index}</button>}
+        {selectedIndex === 0 ? null : <p>...</p>}
+        {selectedIndex > 2 ?<button onClick={() => setSelectedIndex(selectedIndex - 2)}>{selectedIndex - 1 + index}</button>: null}
+        {selectedIndex > 1 ?<button onClick={() => setSelectedIndex(selectedIndex - 1)}>{selectedIndex + index}</button>: null}
+        <button disabled >{selectedIndex +1 + index}</button>
+        {selectedIndex < persons.length - 1 ?<button onClick={() => setSelectedIndex(selectedIndex + 1)}>{selectedIndex + 2 + index}</button>: null}
+        {selectedIndex < persons.length - 3 ?<button onClick={() => setSelectedIndex(selectedIndex + 2)}>{selectedIndex + 3 + index}</button>: null}
+        {selectedIndex === persons.length - 2 || selectedIndex === persons.length - 1 ? null : <p>...</p>}
+        {selectedIndex === persons.length - 2 || selectedIndex === persons.length - 1 ? null :<button onClick={() => setSelectedIndex(persons.length - 1)}>{persons.length + index}</button>}
+      </div>
+      <div className= "button-nav">
+        <button onClick={() => setPage(page - 1)} disabled={page === 1}>Previous Page</button>
+        <p>Page {page} of {totalPages}</p>
+        <button onClick={() => setPage(page + 1)} disabled={page === totalPages}>Next Page</button>
+      </div>
       <ul>
         {persons
         .filter((_:any, index: any) => index === selectedIndex)
         .map((person: any) => ( 
-        <Person {...person} />
+        <Person key={person.id} {...person} />
         ))}
       </ul>
-      <hr />
-      <div className= "button-nav">
-        {selectedIndex === 0 ? null :<button onClick={() => setSelectedIndex(0)}>1</button>}
-        {selectedIndex === 0 ? null : <p>...</p>}
-        {selectedIndex > 2 ?<button onClick={() => setSelectedIndex(selectedIndex - 2)}>{selectedIndex - 1}</button>: null}
-        {selectedIndex > 1 ?<button onClick={() => setSelectedIndex(selectedIndex - 1)}>{selectedIndex}</button>: null}
-        <button disabled >{selectedIndex +1 }</button>
-        {selectedIndex < persons.length - 1 ?<button onClick={() => setSelectedIndex(selectedIndex + 1)}>{selectedIndex + 2}</button>: null}
-        {selectedIndex < persons.length - 3 ?<button onClick={() => setSelectedIndex(selectedIndex + 2)}>{selectedIndex + 3}</button>: null}
-        {selectedIndex === persons.length - 2 || selectedIndex === persons.length - 1 ? null : <p>...</p>}
-        {selectedIndex === persons.length - 2 || selectedIndex === persons.length - 1 ? null :<button onClick={() => setSelectedIndex(persons.length - 1)}>{persons.length}</button>}
-      </div>
     </div>
     );
 }
@@ -82,6 +106,8 @@ function Main({ query }: { query: string }) {
 function Person(person: any) {
   return (
     <div>
+      <hr />
+      <h1>Person</h1>
       <p>Person's name: {person.name}</p>
       <p>Department: {person.known_for_department}</p>
       < KnownForPerson {...person} />
