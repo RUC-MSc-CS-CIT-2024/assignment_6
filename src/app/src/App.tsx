@@ -71,6 +71,7 @@ function Main({ query }: { query: string }) {
   return persons.length === 0 ?(
     <div>
       <p>No person found</p>
+      <img src="https://www.reactiongifs.us/wp-content/uploads/2014/08/somethings_fucky_trailer_park_boys.gif" alt="No person found" />
     </div>
   ) : (
     <div>
