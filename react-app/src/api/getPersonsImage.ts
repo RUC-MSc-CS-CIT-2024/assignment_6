@@ -1,7 +1,12 @@
-export const getPersons = async (name: string, page: number) => {
+export const getPersonsImage = async (id: number) => {
     try {
         const response = await fetch(
-            `${import.meta.env.VITE_BASE_URL}?query=${name}&page=${page}&api_key=${import.meta.env.VITE_API_KEY}`
+            `${import.meta.env.VITE_BASE_URL_IMAGE}/${id}/images`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${import.meta.env.VITE_API_BEARER_TOKEN}`
+                }
+            }
         );
         if (!response.ok) {
             throw new Error("Network response was not ok");
