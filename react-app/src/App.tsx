@@ -19,8 +19,6 @@ export default function App() {
         queryFn: () => getPersons(person, currentPage),
     });
 
-    console.log(data);
-
     useEffect(() => {
         if (tempPerson) {
             getPersons(tempPerson, 1).then((results) => {
