@@ -1,10 +1,11 @@
-interface KnownFor {
+export interface KnownFor {
     backdrop_path: string;
     id: number;
     title: string;
     original_title: string;
     overview: string;
     poster_path: string;
+    release_date: string;
     media_type: string;
     adult: boolean;
     original_language: string;
@@ -17,4 +18,5 @@ export interface Person {
     gender: number;
     profile_path: string;
     known_for: KnownFor[];
+    popularity: number;
 }
