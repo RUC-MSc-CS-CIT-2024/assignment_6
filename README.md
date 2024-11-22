@@ -1,5 +1,15 @@
 # assignment_6
 
+---
+## Complex IT Systems - Fall 2024
+
+Group **cit11**: 
+- Ida Hay Jørgensen (stud-ijoergense@ruc.dk)
+- Julius Krüger Madsen (stud-juliusm@ruc.dk)
+- Marek Laslo (stud-laslo@ruc.dk)
+- Sofus Hilfling Nielsen (stud-sofusn@ruc.dk)
+---
+
 ## Getting Started
 
 ### Navigate to the Project Directory
